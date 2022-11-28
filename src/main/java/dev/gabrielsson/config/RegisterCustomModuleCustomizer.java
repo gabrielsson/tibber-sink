@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 @Singleton
-
 public class RegisterCustomModuleCustomizer implements ObjectMapperCustomizer {
 
     @Override

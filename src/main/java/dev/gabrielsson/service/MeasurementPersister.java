@@ -7,6 +7,8 @@ import io.smallrye.common.annotation.Blocking;
 import io.smallrye.graphql.client.Response;
 import io.smallrye.mutiny.Uni;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -23,13 +25,16 @@ public class MeasurementPersister {
     @Transactional
     @Blocking
     public void persist(Response r) {
-        LiveMeasurementEntity liveMeasurementEntity = toEntity(r);
-            repository.persist(liveMeasurementEntity);
+        toEntity(r).ifPresent(repository::persist);
     }
 
-    private LiveMeasurementEntity toEntity(Response r) {
-        LiveMeasurement liveMeasurement = r.getObject(LiveMeasurement.class, "liveMeasurement");
-        return toLiveMeasurementEntity(liveMeasurement);
+    private Optional<LiveMeasurementEntity> toEntity(Response r) {
+        try {
+            LiveMeasurement liveMeasurement = r.getObject(LiveMeasurement.class, "liveMeasurement");
+            return Optional.of(toLiveMeasurementEntity(liveMeasurement));
+        } catch (NoSuchElementException e){
+            return Optional.empty();
+        }
     }
 
     private LiveMeasurementEntity toLiveMeasurementEntity(LiveMeasurement liveMeasurement) {
