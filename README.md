@@ -1,4 +1,7 @@
 # tibber-sink Project
+Creates a subscription to [Tibber API](https://developer.tibber.com) and sinks the data into a data source.
+
+With MySQL as datasource the table can then be used to visualize utilization.
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
